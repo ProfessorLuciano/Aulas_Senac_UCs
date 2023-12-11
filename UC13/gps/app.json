@@ -1,0 +1,53 @@
+{
+  "expo": {
+    "name": "gps",
+    "slug": "gps",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff",
+      "expo": {
+        "plugins": [
+          [
+            "expo-location",
+            {
+              "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+            }
+          ]
+        ]
+      }
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.mundoslackware.gps"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.mundoslackware.gps"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "fd80c65f-dba9-4c20-a31d-9a19614da7cc"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/fd80c65f-dba9-4c20-a31d-9a19614da7cc"
+    }
+  }
+}
