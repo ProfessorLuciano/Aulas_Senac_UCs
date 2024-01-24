@@ -3,7 +3,7 @@ import { CriarMotoqueirosServices } from '../../Services/Motoqueiros/CriarMotoqu
 
 class CriarMotoqueirosController{
     async handle(req: Request, res: Response){
-        const {nome, nusuarios, password } = req.body
+        const { nome, nusuarios, password } = req.body
         const criarMotoqueirosServices = new CriarMotoqueirosServices()
         const resposta = await criarMotoqueirosServices.execute({
             nome,

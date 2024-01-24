@@ -35,7 +35,7 @@ class LoginMotoqueirosServices {
         )
         return {
             id: usuario.id,
-            nusuario: usuario.nusuario,
+            nome: usuario.nome,
             token: token
         }
     }
