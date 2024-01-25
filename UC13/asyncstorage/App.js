@@ -12,39 +12,43 @@ import {
 
 export default function App() {
 
-  const [ nusuario, setNusuario ] = useState('')
-  const [ password, setPassword ] = useState('')
-  const [ respNome, setRespNome ] = useState('')
-  const [ respToken, setRespToken ] = useState('')
+  const [nusuario, setNusuario] = useState('')
+  const [password, setPassword] = useState('')
+  const [respNome, setRespNome] = useState('')
+  const [respToken, setRespToken] = useState('')
 
-  async function handleLogin(){
+  async function handleLogin() {
 
     try {
-      const resposta = await apiLocal.post('/LoginMotoqueiros',{
+      const resposta = await apiLocal.post('/LoginMotoqueiros', {
         nusuario,
         password
       })
-       await AsyncStorage.setItem('@nome', JSON.stringify(resposta.data.nome))
-       await AsyncStorage.setItem('@token', JSON.stringify(resposta.data.token))
-      
+      await AsyncStorage.setItem('@nome', JSON.stringify(resposta.data.nome))
+      await AsyncStorage.setItem('@token', JSON.stringify(resposta.data.token))
+
     } catch (error) {
-       console.log(error)
+      console.log(error)
     }
-    
+
   }
 
-  async function handleAsyncNome(){
+  async function handleAsyncNome() {
     const iNome = await AsyncStorage.getItem('@nome')
     const nome = JSON.parse(iNome)
     setRespToken('')
     setRespNome(nome)
   }
 
-  async function handleAsyncToken(){
+  async function handleAsyncToken() {
     const iToken = await AsyncStorage.getItem('@token')
     const token = JSON.parse(iToken)
     setRespNome('')
     setRespToken(token)
+  }
+
+  async function handleClearAsync(){
+    await AsyncStorage.clear()
   }
 
   return (
@@ -76,9 +80,12 @@ export default function App() {
       <TouchableOpacity onPress={handleAsyncToken} style={styles.buttonAsyncToken}>
         <Text style={styles.buttonEnviarText}>Async_Token</Text>
       </TouchableOpacity>
+      <TouchableOpacity onPress={handleClearAsync} style={styles.buttonAsyncClear}>
+        <Text style={styles.buttonEnviarText}>Async_Clear</Text>
+      </TouchableOpacity>
       <Text style={styles.textResposta}>{respNome}</Text>
-      <Text>{respToken}</Text>   
-         
+      <Text>{respToken}</Text>
+
     </View>
   )
 }
@@ -111,7 +118,7 @@ const styles = StyleSheet.create({
     width: '97%',
     borderRadius: 8,
   },
-  buttonEnviarText:{
+  buttonEnviarText: {
     textAlign: 'center',
     padding: 5,
     fontSize: 25,
@@ -128,6 +135,13 @@ const styles = StyleSheet.create({
   buttonAsyncToken: {
     marginTop: 30,
     backgroundColor: "#FF0023",
+    height: 45,
+    width: '97%',
+    borderRadius: 8,
+  },
+  buttonAsyncClear: {
+    marginTop: 30,
+    backgroundColor: "#DB9107",
     height: 45,
     width: '97%',
     borderRadius: 8,
