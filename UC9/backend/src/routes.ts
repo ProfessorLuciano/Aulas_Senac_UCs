@@ -9,6 +9,7 @@ import { CriarusuariosController } from './Controller/Usuarios/CriarUsuariosCont
 import { ListarUsuarioTokenController } from './Controller/Usuarios/listarUsuarioTokenController'
 
 import { CriarMotoqueirosController } from './Controller/Motoqueiros/CriarMotoqueirosController'
+import { ListarMotoqueirosTokenController } from './Controller/Motoqueiros/ListarMotoqueiroTokenController'
 
 import { CriarProdutosController } from './Controller/Produtos/CriarProdutosController'
 
@@ -16,7 +17,6 @@ import { CriarCategoriasController } from './Controller/Categorias/CriarCategori
 import { ListarCategoriasController } from './Controller/Categorias/ListarCategoriasController'
 
 import { isAutenticado } from './middleware/isAutenticado'
-import { hash } from 'bcryptjs'
 const router = Router()
 const upload = multer(uploadConfig.upload('./tmp'))
 
@@ -24,6 +24,7 @@ const upload = multer(uploadConfig.upload('./tmp'))
 //Rotas de Logins
 router.post('/LoginUsuarios', new LoginController().handle)
 router.post('/LoginMotoqueiros', new LoginMotoqueirosController().handle)
+router.get('/ListarMotoqueirosToken', isAutenticado, new ListarMotoqueirosTokenController().handle)
 
 //Rotas de Motoqueiros
 router.post('/CriarMotoqueiros', new CriarMotoqueirosController().handle)
