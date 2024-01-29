@@ -11,6 +11,9 @@ import { ListarUsuarioTokenController } from './Controller/Usuarios/listarUsuari
 import { CriarMotoqueirosController } from './Controller/Motoqueiros/CriarMotoqueirosController'
 import { ListarMotoqueirosTokenController } from './Controller/Motoqueiros/ListarMotoqueiroTokenController'
 
+import { CriarClientesController } from './Controller/Clientes/CriarClientesController'
+import { LoginClientesController } from './Controller/Clientes/LoginClientesController'
+
 import { CriarProdutosController } from './Controller/Produtos/CriarProdutosController'
 
 import { CriarCategoriasController } from './Controller/Categorias/CriarCategoriasController'
@@ -28,6 +31,10 @@ router.get('/ListarMotoqueirosToken', isAutenticado, new ListarMotoqueirosTokenC
 
 //Rotas de Motoqueiros
 router.post('/CriarMotoqueiros', new CriarMotoqueirosController().handle)
+router.post('/LoginClientes', new LoginClientesController(). handle)
+
+//Rotas de Clientes
+router.post('/CriarClientes', new CriarClientesController().handle)
 
 
 //Estrutura de Usuários

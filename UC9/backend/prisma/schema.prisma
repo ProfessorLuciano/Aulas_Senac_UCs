@@ -11,16 +11,37 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Motoqueiro{
-  id String @id @default(uuid())
-  nome String
+model Motoqueiro {
+  id       String @id @default(uuid())
+  nome     String
   nusuario String
-  senha String
+  senha    String
 
   create_at DateTime? @default(now())
   update_at DateTime? @default(now())
 
   @@map("motoqueiros")
+}
+
+model Cliente {
+  id          String  @id @default(uuid())
+  nome        String
+  celular     String
+  cpf         String
+  email       String
+  senha       String
+  cep         String
+  rua         String
+  numero      String
+  complemento String?
+  bairro      String
+  cidade      String
+  estado      String
+
+  create_at DateTime? @default(now())
+  update_at DateTime? @default(now())
+
+  @@map("clientes")
 }
 
 model Usuario {

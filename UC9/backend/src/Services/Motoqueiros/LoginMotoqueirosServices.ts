@@ -14,6 +14,7 @@ class LoginMotoqueirosServices {
                 nusuario: nusuario
             }
         })
+       
         if (!usuario) {
             throw new Error('Usuario/Senha estão incorretos')
         }
