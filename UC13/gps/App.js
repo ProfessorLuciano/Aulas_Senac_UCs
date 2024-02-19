@@ -45,6 +45,8 @@ export default function App() {
       })
     })
   }, [])
+  console.log('Latitude: ' , localizacao.coords.latitude)
+  console.log('Longitude: ' , localizacao.coords.longitude)
 
 
   return (
