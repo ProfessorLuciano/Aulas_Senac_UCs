@@ -13,24 +13,45 @@ import {
 export default function App() {
 
   //identificação do vendedor
-  const vendedor = 10
+  //const vendedor = 10
 
-  const [ nome, setNome ] = useState('')
-  const [ cidade, setCidade ] = useState('')
+  const [nome, setNome] = useState('')
+  const [cidade, setCidade] = useState('')
+  const [vendedores, setVendedores] = useState([''])
 
-  async function cadastroFB(){
-    if(!nome || !cidade){
+  async function cadastroFB() {
+    if (!nome || !cidade) {
       alert('Campos Vazios')
     }
-    let usuarios = await firebase.database().ref('vendedores').child(vendedor)
+    let usuarios = await firebase.database().ref('vendedores')
     let chave = usuarios.push().key
 
     usuarios.child(chave).set({
       nome: nome,
       cidade: cidade
     })
+    setNome('')
+    setCidade('')
     Keyboard.dismiss()
   }
+
+  useEffect(() => {
+    async function buscarVendedores() {
+      await firebase.database().ref('vendedores').on('value', (snapshot) => {
+        setVendedores([''])
+        snapshot?.forEach((item) => {
+          let data = {
+            key: item.key,
+            nome: item.val().nome,
+            cidade: item.val().cidade
+          }
+          setVendedores(oldArray => [...oldArray, data])
+        })
+      })
+    }
+    buscarVendedores()
+  }, [])
+  
 
   return (
     <View style={styles.container}>
@@ -52,6 +73,15 @@ export default function App() {
       <TouchableOpacity style={styles.botaoEnviar} onPress={cadastroFB}>
         <Text style={styles.textoBotao}>Enviar</Text>
       </TouchableOpacity>
+      {vendedores.map((item) =>{
+        return(
+          <View>
+            <Text>Nome: {item.nome}</Text>
+            <Text>Cidade: {item.cidade}</Text>
+          </View>
+        )
+      })}
+      
     </View>
   );
 }
@@ -75,7 +105,7 @@ const styles = StyleSheet.create({
     padding: 7.5,
     borderWidth: 1,
     borderRadius: 10,
-    textAlign: 'center'  
+    textAlign: 'center'
   },
   botaoEnviar: {
     marginTop: 10,
