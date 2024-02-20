@@ -73,8 +73,8 @@ export default function App() {
       <TouchableOpacity style={styles.botaoEnviar} onPress={cadastroFB}>
         <Text style={styles.textoBotao}>Enviar</Text>
       </TouchableOpacity>
-      {vendedores.map((item) =>{
-        return(
+      {vendedores.map((item) => {
+        return(          
           <View>
             <Text>Nome: {item.nome}</Text>
             <Text>Cidade: {item.cidade}</Text>
