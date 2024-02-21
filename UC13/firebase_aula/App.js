@@ -9,6 +9,9 @@ import {
   TouchableOpacity,
   Keyboard
 } from 'react-native';
+import Feather from 'react-native-vector-icons/Feather'
+
+console.disableYellowBox = false
 
 export default function App() {
 
@@ -51,7 +54,14 @@ export default function App() {
     }
     buscarVendedores()
   }, [])
-  
+
+  async function handleDelete(key){
+
+    await firebase.database().ref('vendedores').child(key).remove()
+  }
+
+  console.log(vendedores)
+
 
   return (
     <View style={styles.container}>
@@ -74,14 +84,21 @@ export default function App() {
         <Text style={styles.textoBotao}>Enviar</Text>
       </TouchableOpacity>
       {vendedores.map((item) => {
-        return(          
+        return (
           <View>
-            <Text>Nome: {item.nome}</Text>
-            <Text>Cidade: {item.cidade}</Text>
+            {item.length !== 0 && (
+              <>
+                <Text>Nome: {item.nome}</Text>
+                <Text>Cidade: {item.cidade}</Text>
+                <TouchableOpacity onPress={() => handleDelete(item.key)}>
+                  <Feather name='trash-2' size={30} />
+                </TouchableOpacity>
+              </>
+            )}
           </View>
         )
-      })}
-      
+      })}     
+
     </View>
   );
 }
