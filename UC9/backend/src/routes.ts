@@ -31,10 +31,10 @@ router.get('/ListarMotoqueirosToken', isAutenticado, new ListarMotoqueirosTokenC
 
 //Rotas de Motoqueiros
 router.post('/CriarMotoqueiros', new CriarMotoqueirosController().handle)
-router.post('/LoginClientes', new LoginClientesController(). handle)
 
 //Rotas de Clientes
 router.post('/CriarClientes', new CriarClientesController().handle)
+router.post('/LoginClientes', new LoginClientesController(). handle)
 
 
 //Estrutura de Usuários
