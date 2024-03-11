@@ -38,6 +38,8 @@ model Cliente {
   cidade      String
   estado      String
 
+  pedidos Pedido[]
+
   create_at DateTime? @default(now())
   update_at DateTime? @default(now())
 
@@ -60,10 +62,10 @@ model Categoria {
   id   String @id @default(uuid())
   nome String
 
+  produtos Produto[]
+
   create_at DateTime? @default(now())
   update_at DateTime? @default(now())
-
-  produtos Produto[]
 
   @@map("categorias")
 }
@@ -76,11 +78,49 @@ model Produto {
   preco      String
   banner     String
 
+  itens       ItemPedido[]
+  categorias  Categoria    @relation(fields: [categoriaId], references: [id])
+  categoriaId String
+
   create_at DateTime? @default(now())
   update_at DateTime? @default(now())
 
-  categorias  Categoria @relation(fields: [categoriaId], references: [id])
-  categoriaId String
-
   @@map("produtos")
+}
+
+model Pedido {
+  id          String   @id @default(uuid())
+  n_pedido    Int      @unique @default(autoincrement())
+  valor_total Decimal? @db.Decimal(9, 2)
+  status      String   @default("Aguardando")
+  draft       Boolean  @default(true)
+  entrega     Boolean  @default(false)
+  aceito      Boolean  @default(false)
+  entregador  String?
+
+  clientes   Cliente @relation(fields: [id_cliente], references: [id])
+  id_cliente String
+
+  itens ItemPedido[]
+
+  create_at DateTime? @default(now())
+  update_at DateTime? @default(now())
+
+  @@map("pedidos")
+}
+
+model ItemPedido {
+  id         String  @id @default(uuid())
+  quantidade Int
+  valor      Decimal @db.Decimal(9, 2)
+
+  pedidos    Pedido  @relation(fields: [id_pedido], references: [id])
+  id_pedido  String
+  produtos   Produto @relation(fields: [id_produto], references: [id])
+  id_produto String
+
+  create_at DateTime? @default(now())
+  update_at DateTime? @default(now())
+
+  @@map("itens_pedido")
 }

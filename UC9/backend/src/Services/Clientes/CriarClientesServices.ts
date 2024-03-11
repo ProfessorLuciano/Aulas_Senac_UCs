@@ -1,3 +1,4 @@
+import { response } from 'express'
 import prismaClient from '../../prisma'
 import { hash } from 'bcryptjs'
 
@@ -64,7 +65,11 @@ class CriarClientesServices {
             }
         })
         return ({Dados: 'Cadastro Efetuado com Sucesso'})
+    }
 
+    async listarClientes(){
+        const resposta = await prismaClient.cliente.findMany({})
+        return resposta
     }
 }
 

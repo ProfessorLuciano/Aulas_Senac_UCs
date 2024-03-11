@@ -37,6 +37,12 @@ class CriarClientesController {
         return res.json(resposta)
 
     }
+
+    async listarClientes(req: Request, res: Response){
+        const listarClientes = new CriarClientesServices()
+        const resposta = await listarClientes.listarClientes()
+       return res.json(resposta)
+    }
 }
 
 export { CriarClientesController }

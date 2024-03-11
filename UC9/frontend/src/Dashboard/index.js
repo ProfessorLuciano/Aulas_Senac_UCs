@@ -41,6 +41,7 @@ export default function Dashboard() {
             <h1>Dashboard</h1>
 
             <Link to='/Produtos'>Cadastrar Produtos</Link>
+            <Link to='/Pedidos'>Pedidos</Link>
             <button onClick={handleSair}>Sair</button>
         </div>
     )
