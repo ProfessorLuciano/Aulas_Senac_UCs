@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import apiLocal from '../API/apiLocal/api'
+import Modal from 'react-modal'
 import './produtos.estilo.scss'
 
 
@@ -11,13 +12,16 @@ export default function Produtos() {
     const [fabricante, setFabricante] = useState('')
     const [quantidade, setQuantidade] = useState('')
     const [preco, setPreco] = useState('')
+    const [criarCategoria, setCriarCategoria] = useState('')
 
     const [idCategoria, setIdCategoria] = useState('')
     const [imagem, setImagem] = useState(null)
 
+    const [modalAberto, setModalAberto] = useState(false)
+
     const iToken = localStorage.getItem('@tklogin2023')
     const token = JSON.parse(iToken)
-    
+
     useEffect(() => {
         async function loadCategorias() {
             const resposta = await apiLocal.get('/ListarCategorias', {
@@ -30,12 +34,12 @@ export default function Produtos() {
         loadCategorias()
     }, [categorias])
 
-    function handleImagem(e){
-        if(!e.target.files){
+    function handleImagem(e) {
+        if (!e.target.files) {
             return
         }
         const image = e.target.files[0]
-        if(image.type === 'image/png' || image.type === 'image/jpeg'){
+        if (image.type === 'image/png' || image.type === 'image/jpeg') {
             setImagem(image)
         }
     }
@@ -55,7 +59,7 @@ export default function Produtos() {
             const resposta = await apiLocal.post('/CriarProdutos', data, {
                 headers: {
                     Authorization: 'Bearer ' + `${token}`
-                }                
+                }
             })
             toast.success(resposta.data.dados)
 
@@ -70,8 +74,55 @@ export default function Produtos() {
         setImagem(null)
     }
 
+    async function handleCriarCategoria(e) {
+        try {
+            e.preventDefault()
+            setCriarCategoria('')
+            const nome = criarCategoria
+            await apiLocal.post('/CriarCategorias', {
+                nome
+            },{
+                headers: {
+                    Authorization: 'Bearer ' + `${token}`
+                }
+            })
+            toast.success('Categoria Cadastrada', {
+                toastId: 'toastID'
+            })
+
+        } catch (err) {
+
+        }
+
+    }
+
+    async function abrirModal() {
+        setModalAberto(true)
+    }
+
+    async function fecharModal() {
+        setModalAberto(false)
+    }
+
     return (
         <div className="conteinerProdutosCadastro">
+            <button onClick={abrirModal}>Criar Categoria</button>
+            <Modal
+                isOpen={modalAberto}
+            >
+                <h1>Criar Categorias</h1>
+                <form onSubmit={handleCriarCategoria}>
+                    <input
+                        type="text"
+                        value={criarCategoria}
+                        onChange={(e) => setCriarCategoria(e.target.value)}
+                    />
+                    <button type='submit'>Criar</button>
+                </form>
+
+                <button onClick={fecharModal}>Fechar</button>
+
+            </Modal>
             <div>
                 <h1>Produtos</h1>
             </div>
@@ -121,7 +172,7 @@ export default function Produtos() {
                         value={setImagem}
                         accept='image/jpeg, image/png'
                         onChange={handleImagem}
-                    />                   
+                    />
                     <button type='submit'>Enviar</button>
                 </form>
             </div>
