@@ -12,6 +12,15 @@ class PedidosController {
         return res.json(resposta)
     }
 
+    async listarProdutosCategoria( req: Request, res: Response){
+        const { id } = req.params
+        const listarProdutosCategoria = new PedidosServices()
+        const resposta = await listarProdutosCategoria.listarProdutosCategoria({
+            id
+        })
+        return res.json(resposta)
+    }
+
 }
 
 export { PedidosController }

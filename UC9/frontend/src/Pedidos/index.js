@@ -9,6 +9,7 @@ export default function Pedidos() {
     const [pedidos, setPedidos] = useState([''])
     const [categorias, setCategorias] = useState([''])
     const [categoriaId, setCategoriaId] = useState('')
+    const [produtosCategoria, setProdutosCategoria] = useState([''])
 
     const [modalAberto, setModalAberto] = useState(false)
 
@@ -25,20 +26,19 @@ export default function Pedidos() {
             setClientes(resposta.data)
         }
         listarClientes()
-    }, [])
+    }, []) 
 
     useEffect(() => {
-        async function letCategorias(){
-            const resposta = await apiLocal.get('/ListarCategorias', {
-                headers:{
+        async function lerProdutosCategoria(){
+            const resposta = await apiLocal.get(`/ListarProdutosCategoria/${categoriaId}`,{
+                headers: {
                     Authorization: 'Bearer ' + `${token}`
                 }
             })
-            console.log(resposta)
+            setProdutosCategoria(resposta.data)
         }
-        letCategorias()
-    }, [])
-
+        lerProdutosCategoria()
+    }, [categoriaId])
 
     async function abrirModal() {
         try {
@@ -55,7 +55,7 @@ export default function Pedidos() {
                 setModalAberto(true)
             }
 
-            async function letCategorias(){
+            async function lerCategorias(){
                 const resposta = await apiLocal.get('/ListarCategorias', {
                     headers:{
                         Authorization: 'Bearer ' + `${token}`
@@ -63,13 +63,11 @@ export default function Pedidos() {
                 })
                 setCategorias(resposta.data)
             }
-            letCategorias()
+            lerCategorias()
         } catch (err) {
 
         }
-    }
-
-    console.log(categoriaId)
+    }   
 
     function fecharModal() {
         setModalAberto(false)
@@ -114,6 +112,11 @@ export default function Pedidos() {
                         </select>
                         <select>
                             <option>Selecione a Produto</option>
+                            {produtosCategoria.map((item) => {
+                                return(
+                                    <option>{item.nome}</option>
+                                )
+                            })}
                            
                         </select>
 

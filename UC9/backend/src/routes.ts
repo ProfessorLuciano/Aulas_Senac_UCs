@@ -54,6 +54,7 @@ router.get('/ListarCategorias', isAutenticado, new ListarCategoriasController().
 
 //Estrutura de Pedidos
 router.post('/CriarPedidos', isAutenticado, new PedidosController().criarPedidos)
+router.get('/ListarProdutosCategoria/:id', isAutenticado, new PedidosController().listarProdutosCategoria)
 
 
 export { router }
