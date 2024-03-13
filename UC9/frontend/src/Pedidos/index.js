@@ -11,6 +11,9 @@ export default function Pedidos() {
     const [categoriaId, setCategoriaId] = useState('')
     const [produtosCategoria, setProdutosCategoria] = useState([''])
 
+    const [quantidade, setQuantidade] = useState('')
+    const [idItemProduto, setIdItemProduto] = useState('')
+
     const [modalAberto, setModalAberto] = useState(false)
 
     const iToken = localStorage.getItem('@tklogin2023')
@@ -26,11 +29,11 @@ export default function Pedidos() {
             setClientes(resposta.data)
         }
         listarClientes()
-    }, []) 
+    }, [])
 
     useEffect(() => {
-        async function lerProdutosCategoria(){
-            const resposta = await apiLocal.get(`/ListarProdutosCategoria/${categoriaId}`,{
+        async function lerProdutosCategoria() {
+            const resposta = await apiLocal.get(`/ListarProdutosCategoria/${categoriaId}`, {
                 headers: {
                     Authorization: 'Bearer ' + `${token}`
                 }
@@ -55,9 +58,9 @@ export default function Pedidos() {
                 setModalAberto(true)
             }
 
-            async function lerCategorias(){
+            async function lerCategorias() {
                 const resposta = await apiLocal.get('/ListarCategorias', {
-                    headers:{
+                    headers: {
                         Authorization: 'Bearer ' + `${token}`
                     }
                 })
@@ -67,11 +70,20 @@ export default function Pedidos() {
         } catch (err) {
 
         }
-    }   
+    }
 
     function fecharModal() {
         setModalAberto(false)
-    }    
+    }
+
+    async function handleItemPedido(e) {
+        e.preventDefault()
+        const prodExt = produtosCategoria.filter((item) => item.id === idItemProduto)
+        const valor = Number(prodExt.map((item) => item.preco))
+       
+        console.log(quantidade, pedidos.id, valor * quantidade)
+    }
+    
 
     return (
         <div>
@@ -89,7 +101,6 @@ export default function Pedidos() {
             </select>
             <button onClick={abrirModal}>Criar Pedidos</button>
 
-
             {pedidos.length !== 1 && (
                 <Modal
                     isOpen={modalAberto}
@@ -99,30 +110,38 @@ export default function Pedidos() {
                         <h2>Cliente: {pedidos.clientes.nome}</h2>
                         <h2>Numero do Pedido: {pedidos.n_pedido}</h2>
                         <h1>Itens do Pedido</h1>
-                        <select  
-                        value={categoriaId}
-                        onChange={(e) => setCategoriaId(e.target.value)}
-                        >
-                            <option>Selecione a categoria</option>
-                            {categorias.map((item) => {
-                                return(
-                                    <option value={item.id}>{item.nome}</option>
-                                )
-                            })}
-                        </select>
-                        <select>
-                            <option>Selecione a Produto</option>
-                            {produtosCategoria.map((item) => {
-                                return(
-                                    <option>{item.nome}</option>
-                                )
-                            })}
-                           
-                        </select>
-
+                        <form onSubmit={handleItemPedido}>
+                            <select
+                                value={categoriaId}
+                                onChange={(e) => setCategoriaId(e.target.value)}
+                            >
+                                <option>Selecione a categoria</option>
+                                {categorias.map((item) => {
+                                    return (
+                                        <option value={item.id}>{item.nome}</option>
+                                    )
+                                })}
+                            </select>
+                            <select 
+                            value={idItemProduto}
+                            onChange={(e) => setIdItemProduto(e.target.value)}
+                            >
+                                <option>Selecione a Produto</option>
+                                {produtosCategoria.map((item) => {
+                                    return (
+                                        <option value={item.id}>{item.nome}</option>
+                                    )
+                                })}
+                            </select>
+                            <input
+                                type='number'
+                                placeholder='Quantidade'
+                                value={quantidade}
+                                onChange={(e) => setQuantidade(e.target.value)}
+                            />
+                            <button type='submit'>Adicionar Produto</button>
+                        </form>
                     </>
-
-
                     <button onClick={fecharModal}>Finalizar Pedidos</button>
                 </Modal>
             )}
