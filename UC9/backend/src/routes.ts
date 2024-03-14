@@ -22,6 +22,7 @@ import { ListarCategoriasController } from './Controller/Categorias/ListarCatego
 import { PedidosController } from './Controller/Pedidos/PedidosController'
 
 import { isAutenticado } from './middleware/isAutenticado'
+import { PedidosServices } from './Services/Pedidos/PedidosServices'
 const router = Router()
 const upload = multer(uploadConfig.upload('./tmp'))
 
@@ -56,6 +57,7 @@ router.get('/ListarCategorias', isAutenticado, new ListarCategoriasController().
 router.post('/CriarPedidos', isAutenticado, new PedidosController().criarPedidos)
 router.get('/ListarProdutosCategoria/:id', isAutenticado, new PedidosController().listarProdutosCategoria)
 router.post('/CriarItensPedido', isAutenticado, new PedidosController().criarItensPedido)
-
+router.delete('/ApagarItemPedido/:id', isAutenticado, new PedidosController().apagarItemPedido)
+router.get('/SomarItensPedido/:id', isAutenticado, new PedidosController().somarItensPedido)
 
 export { router }

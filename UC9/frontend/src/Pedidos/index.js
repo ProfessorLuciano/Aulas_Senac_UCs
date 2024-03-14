@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import Modal from 'react-modal'
+import { toast } from 'react-toastify'
 import apiLocal from '../API/apiLocal/api'
+import './estilo.pedidos.css'
 
 export default function Pedidos() {
 
@@ -14,6 +16,7 @@ export default function Pedidos() {
     const [idItemProduto, setIdItemProduto] = useState('')
     const [quantidadeF, setQuantidadeF] = useState('')
     const [itensPedido, setItensPedido] = useState([''])
+    const [valorTotal, setValorTotal] = useState('')
 
     const [modalAberto, setModalAberto] = useState(false)
 
@@ -57,6 +60,7 @@ export default function Pedidos() {
 
     async function abrirModal() {
         try {
+            setItensPedido([''])
             const id_cliente = idCliente
             const resposta = await apiLocal.post('/CriarPedidos', {
                 id_cliente
@@ -84,8 +88,20 @@ export default function Pedidos() {
         }
     }
 
-    function fecharModal() {
+    async function fecharModal() {
+       try {
+        const id = pedidos.id
+        const resposta = await apiLocal.put(`/FinalizarPedido/${id}`, {
+            headers: {
+                Authorization: 'Bearer ' + `${token}`
+            }
+        })
+        console.log(resposta)
         setModalAberto(false)
+       } catch (err) {
+        console.log(err)
+        
+       }
     }
 
     async function handleItemPedido(e) {
@@ -108,17 +124,46 @@ export default function Pedidos() {
                 }
             })
             let dados = {
+                id: resposta.data.id,
                 produto: resposta.data.produtos.nome,
                 quantidade: resposta.data.quantidade,
                 valor: Number(resposta.data.valor)
             }
-            setItensPedido(oldArray => [...oldArray, dados])
-
+            setItensPedido(oldArray => [...oldArray, dados])            
         } catch (err) {
-            console.log(err)
+            toast.error(err.response.data.error)
         }
     }
-    console.log(itensPedido)
+
+    async function handleApagarItem(id){
+        try {
+            await apiLocal.delete(`/ApagarItemPedido/${id}`, {
+                headers:{
+                    Authorization: 'Bearer ' + `${token}`
+                }
+            })
+            setItensPedido(itensPedido.filter((item) => item.id !== id))
+        } catch (err) {
+            console.log(err)            
+        }
+    }
+
+    useEffect(() => {
+        try {
+            async function somarItensPedido(){
+                const id = pedidos.id
+                const resposta = await apiLocal.get(`/SomarItensPedido/${id}`, {
+                    headers: {
+                        Authorization: 'Bearer ' + `${token}`
+                    }
+                })
+                setValorTotal(resposta.data)
+            }
+            somarItensPedido()
+        } catch (err) {
+            console.log(err)            
+        }
+    }, [itensPedido])
 
     return (
         <div>
@@ -180,12 +225,17 @@ export default function Pedidos() {
                             return (
                                 <>
                                     {item.length !== 0 && (
-                                        <h2>{item.produto} - {item.quantidade} - {item.valor}</h2>
+                                        <>
+                                            <div className='buttonApagar'>
+                                                <h2>{item.produto} - {item.quantidade} - {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(`${item.valor}`)}</h2>
+                                                <button onClick={() => handleApagarItem(item.id)}>Apagar</button>
+                                            </div>
+                                        </>
                                     )}
                                 </>
                             )
                         })}
-                        <h1>Valor Total: </h1>
+                        <h1>Valor Total: {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(`${valorTotal}`)} </h1>
                     </>
                     <button onClick={fecharModal}>Finalizar Pedidos</button>
                 </Modal>
