@@ -54,10 +54,8 @@ router.get('/ListarCategorias', isAutenticado, new ListarCategoriasController().
 
 //Estrutura de Pedidos
 router.post('/CriarPedidos', isAutenticado, new PedidosController().criarPedidos)
-router.post('/CriarItensPedido', isAutenticado, new PedidosController().criarItensPedido)
 router.get('/ListarProdutosCategoria/:id', isAutenticado, new PedidosController().listarProdutosCategoria)
-router.get('/SomarItensPedido/:id', isAutenticado, new PedidosController().somarItensPedidos)
-router.delete('/ApagarItemPedido/:id', isAutenticado, new PedidosController().apagarItemPedido)
+router.post('/CriarItensPedido', isAutenticado, new PedidosController().criarItensPedido)
 
 
 export { router }

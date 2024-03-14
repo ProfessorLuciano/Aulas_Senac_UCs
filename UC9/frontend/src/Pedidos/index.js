@@ -8,11 +8,12 @@ export default function Pedidos() {
     const [idCliente, setIdCliente] = useState('')
     const [pedidos, setPedidos] = useState([''])
     const [categorias, setCategorias] = useState([''])
-    const [categoriaId, setCategoriaId] = useState('')
     const [produtosCategoria, setProdutosCategoria] = useState([''])
 
-    const [quantidade, setQuantidade] = useState('')
+    const [categoriaId, setCategoriaId] = useState('')
     const [idItemProduto, setIdItemProduto] = useState('')
+    const [quantidadeF, setQuantidadeF] = useState('')
+    const [itensPedido, setItensPedido] = useState([''])
 
     const [modalAberto, setModalAberto] = useState(false)
 
@@ -20,20 +21,24 @@ export default function Pedidos() {
     const token = JSON.parse(iToken)
 
     useEffect(() => {
-        async function listarClientes() {
-            const resposta = await apiLocal.get('/ListarClientes', {
-                headers: {
-                    Authorization: 'Bearer ' + `${token}`
-                }
-            })
-            setClientes(resposta.data)
+        try {
+            async function listarClientes() {
+                const resposta = await apiLocal.get('/ListarClientes', {
+                    headers: {
+                        Authorization: 'Bearer ' + `${token}`
+                    }
+                })
+                setClientes(resposta.data)
+            }
+            listarClientes()
+        } catch (err) {
+
         }
-        listarClientes()
     }, [])
 
     useEffect(() => {
         try {
-            if(!categoriaId){
+            if (!categoriaId) {
                 return
             }
             async function lerProdutosCategoria() {
@@ -46,7 +51,7 @@ export default function Pedidos() {
             }
             lerProdutosCategoria()
         } catch (err) {
-            
+
         }
     }, [categoriaId])
 
@@ -84,15 +89,36 @@ export default function Pedidos() {
     }
 
     async function handleItemPedido(e) {
-        e.preventDefault()
-        const prodExt = produtosCategoria.filter((item) => item.id === idItemProduto)
-        const valor = Number(prodExt.map((item) => item.preco))
+        try {
+            e.preventDefault()
+            const prodExt = produtosCategoria.filter((item) => item.id === idItemProduto)
+            const valor = Number(prodExt.map((item) => item.preco) * quantidadeF)
+            const id_pedido = pedidos.id
+            const id_produto = idItemProduto
+            const quantidade = Number(quantidadeF)
 
-        //console.log(quantidade, pedidos.id, valor * quantidade)
+            const resposta = await apiLocal.post('/CriarItensPedido', {
+                id_pedido,
+                id_produto,
+                quantidade,
+                valor
+            }, {
+                headers: {
+                    Authorization: 'Bearer ' + `${token}`
+                }
+            })
+            let dados = {
+                produto: resposta.data.produtos.nome,
+                quantidade: resposta.data.quantidade,
+                valor: Number(resposta.data.valor)
+            }
+            setItensPedido(oldArray => [...oldArray, dados])
+
+        } catch (err) {
+            console.log(err)
+        }
     }
-
-    console.log(produtosCategoria)
-
+    console.log(itensPedido)
 
     return (
         <div>
@@ -118,38 +144,48 @@ export default function Pedidos() {
                     <>
                         <h2>Cliente: {pedidos.clientes.nome}</h2>
                         <h2>Numero do Pedido: {pedidos.n_pedido}</h2>
-                        <h1>Itens do Pedido</h1>                       
-                            <form onSubmit={handleItemPedido}>
-                                <select
-                                    value={categoriaId}
-                                    onChange={(e) => setCategoriaId(e.target.value)}
-                                >
-                                    <option>Selecione a categoria</option>
-                                    {categorias.map((item) => {
-                                        return (
-                                            <option value={item.id}>{item.nome}</option>
-                                        )
-                                    })}
-                                </select>
-                                <select
-                                    value={idItemProduto}
-                                    onChange={(e) => setIdItemProduto(e.target.value)}
-                                >
-                                    <option>Selecione a Produto</option>
-                                    {produtosCategoria.map((item) => {
-                                        return (
-                                            <option value={item.id}>{item.nome}</option>
-                                        )
-                                    })}
-                                </select>
-                                <input
-                                    type='number'
-                                    placeholder='Quantidade'
-                                    value={quantidade}
-                                    onChange={(e) => setQuantidade(e.target.value)}
-                                />
-                                <button type='submit'>Adicionar Produto</button>
-                            </form>                        
+                        <h1>Itens do Pedido</h1>
+                        <form onSubmit={handleItemPedido}>
+                            <select
+                                value={categoriaId}
+                                onChange={(e) => setCategoriaId(e.target.value)}
+                            >
+                                <option>Selecione a categoria</option>
+                                {categorias.map((item) => {
+                                    return (
+                                        <option value={item.id}>{item.nome}</option>
+                                    )
+                                })}
+                            </select>
+                            <select
+                                value={idItemProduto}
+                                onChange={(e) => setIdItemProduto(e.target.value)}
+                            >
+                                <option>Selecione a Produto</option>
+                                {produtosCategoria.map((item) => {
+                                    return (
+                                        <option value={item.id}>{item.nome}</option>
+                                    )
+                                })}
+                            </select>
+                            <input
+                                type='number'
+                                placeholder='Quantidade'
+                                value={quantidadeF}
+                                onChange={(e) => setQuantidadeF(e.target.value)}
+                            />
+                            <button type='submit'>Adicionar Produto</button>
+                        </form>
+                        {itensPedido.map((item) => {
+                            return (
+                                <>
+                                    {item.length !== 0 && (
+                                        <h2>{item.produto} - {item.quantidade} - {item.valor}</h2>
+                                    )}
+                                </>
+                            )
+                        })}
+                        <h1>Valor Total: </h1>
                     </>
                     <button onClick={fecharModal}>Finalizar Pedidos</button>
                 </Modal>

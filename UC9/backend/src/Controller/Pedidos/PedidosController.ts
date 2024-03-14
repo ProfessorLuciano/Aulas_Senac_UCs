@@ -20,6 +20,18 @@ class PedidosController {
         })
         return res.json(resposta)
     }
+
+    async criarItensPedido(req: Request, res: Response) {
+        const { id_pedido, id_produto, quantidade, valor } = req.body
+        const criarItensPedido = new PedidosServices()
+        const resposta = await criarItensPedido.criarItensPedido({
+            id_pedido,
+            id_produto,
+            quantidade,
+            valor
+        })
+        return res.json(resposta)
+    }
 }
 
 export { PedidosController }
