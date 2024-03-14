@@ -35,7 +35,7 @@ router.get('/ListarMotoqueirosToken', isAutenticado, new ListarMotoqueirosTokenC
 router.post('/CriarMotoqueiros', isAutenticado, new CriarMotoqueirosController().handle)
 
 //Rotas de Clientes
-router.post('/CriarClientes', new CriarClientesController().handle)
+router.post('/CriarClientes', isAutenticado, new CriarClientesController().handle)
 router.post('/LoginClientes', new LoginClientesController(). handle)
 router.get('/ListarClientes', isAutenticado, new CriarClientesController().listarClientes)
 
@@ -54,7 +54,10 @@ router.get('/ListarCategorias', isAutenticado, new ListarCategoriasController().
 
 //Estrutura de Pedidos
 router.post('/CriarPedidos', isAutenticado, new PedidosController().criarPedidos)
+router.post('/CriarItensPedido', isAutenticado, new PedidosController().criarItensPedido)
 router.get('/ListarProdutosCategoria/:id', isAutenticado, new PedidosController().listarProdutosCategoria)
+router.get('/SomarItensPedido/:id', isAutenticado, new PedidosController().somarItensPedidos)
+router.delete('/ApagarItemPedido/:id', isAutenticado, new PedidosController().apagarItemPedido)
 
 
 export { router }
