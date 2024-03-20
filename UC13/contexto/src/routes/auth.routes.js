@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
 import DashBoard from '../Dashboard'
+import Produtos from '../Produtos'
 
 
 export default function AuthRoutes() {
@@ -8,6 +9,7 @@ export default function AuthRoutes() {
         <BrowserRouter>
             <Routes>
                 <Route path='/' element={<DashBoard />} />
+                <Route path='/Produtos' element={<Produtos />} />
             </Routes>
         </BrowserRouter>
     )

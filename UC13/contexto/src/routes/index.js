@@ -5,9 +5,7 @@ import AuthRoutes from '../routes/auth.routes'
 
 export default function RotasIndex() {
 
-    const { autenticado, nome } = useContext(Contexts)
-    console.log(autenticado, nome)
-   
+    const { autenticado } = useContext(Contexts)
     
     return (
         autenticado === true ? <AuthRoutes /> : <NoAuthRoutes />

@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react'
+import { createContext, useState, useEffect } from 'react'
 import apiLocal from '../Api/apiLocal'
 import { toast } from 'react-toastify'
 
@@ -6,13 +6,45 @@ export const Contexts = createContext()
 
 export default function AuthProvider({ children }) {
 
+    const [token, setToken] = useState(false)
+
+
+    const autenticado = !!token
+
+    useEffect(() => {
+        async function verificaToken() {
+            const iToken = localStorage.getItem('@tklogin24')
+            if (!iToken) {
+                setToken(false)
+                return
+            }
+            const { token } = JSON.parse(iToken)
+
+            const resposta = await apiLocal('/ListarUsuarioToken', {
+                headers: {
+                    Authorization: 'Bearer ' + `${token}`
+                }
+            })
+            if (resposta.data.id) {
+                setToken(true)
+            } else {
+                setToken(false)
+            }
+        }
+        verificaToken()
+    }, [autenticado])
+
+
     async function handleLogar(email, password) {
         try {
             const resposta = await apiLocal.post('/LoginUsuarios', {
                 email,
                 password
             })
-            console.log(resposta)
+            const data = resposta.data
+            localStorage.setItem('@tklogin24', JSON.stringify(data))
+            setToken(true)
+
         } catch (err) {
             toast.error(err.response.data.error, {
                 toastId: 'toastId'
@@ -23,7 +55,7 @@ export default function AuthProvider({ children }) {
 
 
     return (
-        <Contexts.Provider value={{ handleLogar }} >
+        <Contexts.Provider value={{ handleLogar, autenticado }} >
             {children}
         </Contexts.Provider>
     )

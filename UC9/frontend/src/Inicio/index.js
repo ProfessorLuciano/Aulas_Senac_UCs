@@ -18,6 +18,8 @@ export default function Inicio() {
     useEffect(() => {
         const iToken = localStorage.getItem('@tklogin2023')
         const token = JSON.parse(iToken)
+
+        
         if (!token) {
             navigation('/')
             return
