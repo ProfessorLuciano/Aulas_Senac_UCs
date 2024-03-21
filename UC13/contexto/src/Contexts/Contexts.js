@@ -8,32 +8,27 @@ export default function AuthProvider({ children }) {
 
     const [token, setToken] = useState(false)
 
-
     const autenticado = !!token
 
-    useEffect(() => {
-        async function verificaToken() {
-            const iToken = localStorage.getItem('@tklogin24')
-            if (!iToken) {
-                setToken(false)
-                return
-            }
-            const { token } = JSON.parse(iToken)
-
-            const resposta = await apiLocal('/ListarUsuarioToken', {
-                headers: {
-                    Authorization: 'Bearer ' + `${token}`
-                }
-            })
-            if (resposta.data.id) {
-                setToken(true)
-            } else {
-                setToken(false)
-            }
+    async function verificaToken() {
+        const iToken = localStorage.getItem('@tklogin24')
+        if (!iToken) {
+            setToken(false)
+            return
         }
-        verificaToken()
-    }, [autenticado])
+        const { token } = JSON.parse(iToken)
 
+        const resposta = await apiLocal('/ListarUsuarioToken', {
+            headers: {
+                Authorization: 'Bearer ' + `${token}`
+            }
+        })
+        if (resposta.data.id) {
+            setToken(true)
+        } else {
+            setToken(false)
+        }
+    }
 
     async function handleLogar(email, password) {
         try {
@@ -52,10 +47,8 @@ export default function AuthProvider({ children }) {
         }
     }
 
-
-
     return (
-        <Contexts.Provider value={{ handleLogar, autenticado }} >
+        <Contexts.Provider value={{ handleLogar, autenticado, verificaToken }} >
             {children}
         </Contexts.Provider>
     )

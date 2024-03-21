@@ -1,11 +1,15 @@
-import { useState, useContext } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { Contexts } from '../Contexts/Contexts'
 import { toast } from 'react-toastify'
 
 export default function Login() {
 
-    const { handleLogar } = useContext(Contexts)
-    
+    const { handleLogar, verificaToken } = useContext(Contexts)
+
+    useEffect(() => {
+        verificaToken()
+    }, [])
+
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
@@ -20,7 +24,7 @@ export default function Login() {
             }
             await handleLogar(email, password)
         } catch (err) {
-           //console.log(err)
+            //console.log(err)
         }
 
     }
