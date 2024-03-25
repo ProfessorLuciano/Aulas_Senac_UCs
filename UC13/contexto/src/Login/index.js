@@ -6,9 +6,9 @@ export default function Login() {
 
     const { handleLogar, verificaToken } = useContext(Contexts)
 
-    useEffect(() => {
+    //useEffect(() => {
         verificaToken()
-    }, [])
+   // }, [])
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
