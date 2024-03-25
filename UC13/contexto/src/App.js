@@ -4,7 +4,7 @@ import { ToastContainer } from 'react-toastify'
 
 export default function App() {
   return (
-    <div>
+    <div className='container-fluid'>
       <AuthProvider>
         <Rotas />
         <ToastContainer
