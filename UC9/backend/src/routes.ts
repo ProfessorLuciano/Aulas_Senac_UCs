@@ -36,7 +36,7 @@ router.get('/ListarMotoqueirosToken', isAutenticado, new ListarMotoqueirosTokenC
 router.post('/CriarMotoqueiros', isAutenticado, new CriarMotoqueirosController().handle)
 
 //Rotas de Clientes
-router.post('/CriarClientes', isAutenticado, new CriarClientesController().handle)
+router.post('/CriarClientes', new CriarClientesController().handle)
 router.post('/LoginClientes', new LoginClientesController(). handle)
 router.get('/ListarClientes', isAutenticado, new CriarClientesController().listarClientes)
 

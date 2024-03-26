@@ -10,6 +10,7 @@ class LoginClientesController{
             email,
             password
         })
+        //console.log(resposta)
         return res.json(resposta)
     }
 }
