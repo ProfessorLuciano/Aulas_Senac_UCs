@@ -3,6 +3,13 @@ import { PedidosServices } from '../../Services/Pedidos/PedidosServices'
 
 
 class PedidosController {
+
+    async listarProdutosGeral(req: Request, res: Response){
+        const listarProdutosGeral = new PedidosServices()
+        const resposta = await listarProdutosGeral.listarProdutosGeral()
+        return res.json(resposta)
+    }
+
     async criarPedidos(req: Request, res: Response) {
         const { id_cliente } = req.body
         const criarPedidoServices = new PedidosServices()

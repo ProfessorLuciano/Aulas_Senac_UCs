@@ -14,6 +14,17 @@ interface CriarItensPedido{
 }
 
 class PedidosServices {
+    async listarProdutosGeral(){
+        const resposta = await prismaClient.produto.findMany({
+            include: {
+                categorias: true
+            }, orderBy: {
+                nome: 'desc'
+            }
+        })
+        return resposta
+    }
+
     async criarPedido({ id_cliente }: IdCliente) {
         const resposta = await prismaClient.pedido.create({
             data: {

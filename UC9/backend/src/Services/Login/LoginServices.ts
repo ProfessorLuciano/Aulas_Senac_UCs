@@ -29,7 +29,7 @@ class LoginServices {
             process.env.JWT_SECRET,
             {
                 subject: usuario.id,
-                expiresIn: 100
+                expiresIn: 1000000
             }
         )
         return {
