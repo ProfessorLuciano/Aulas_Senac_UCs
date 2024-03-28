@@ -4,11 +4,14 @@
     align-items: center;
 
     h1 {
-        background-color: #19f3a7;
+        background-color: #0431d3;
+        color: #FFFFFF;
         border-bottom-left-radius: 0.5rem;
         border-bottom-right-radius: 0.5rem;
         text-align: center;
-        height: 4rem;
+        font-weight: bold;
+        font-size: 5rem;
+       // height: 4rem;
         padding: 0.5rem;
         width: 100%;
     }
@@ -16,7 +19,7 @@
 
 .formInicio {
     h2 {
-        background-color: #19f3a7;
+        background-color: #0431d3;
         border-radius: 0.5rem;
         text-align: center;
         height: 4rem;

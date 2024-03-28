@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
+import { AuthContexts } from '../Contexts/AuthContext'
 import { toast } from 'react-toastify'
 import apiLocal from '../API/apiLocal/api'
 import Modal from 'react-modal'
@@ -6,6 +7,9 @@ import './produtos.estilo.scss'
 
 
 export default function Produtos() {
+
+    const { verificaToken, token } = useContext(AuthContexts)
+    verificaToken()
 
     const [categorias, setCategorias] = useState([''])
     const [nome, setNome] = useState('')
@@ -18,9 +22,6 @@ export default function Produtos() {
     const [imagem, setImagem] = useState(null)
 
     const [modalAberto, setModalAberto] = useState(false)
-
-    const iToken = localStorage.getItem('@tklogin2023')
-    const token = JSON.parse(iToken)
 
     useEffect(() => {
         async function loadCategorias() {
@@ -81,7 +82,7 @@ export default function Produtos() {
             const nome = criarCategoria
             await apiLocal.post('/CriarCategorias', {
                 nome
-            },{
+            }, {
                 headers: {
                     Authorization: 'Bearer ' + `${token}`
                 }

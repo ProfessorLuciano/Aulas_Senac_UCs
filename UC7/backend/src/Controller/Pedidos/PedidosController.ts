@@ -4,6 +4,12 @@ import { PedidosServices } from '../../Services/Pedidos/PedidosServices'
 
 class PedidosController {
 
+    async listarPedidos(req: Request, res: Response){
+        const listarPedidos = new PedidosServices()
+        const resposta = await listarPedidos.listarPedidos()
+        return res.json(resposta)
+    }
+
     async listarProdutosGeral(req: Request, res: Response){
         const listarProdutosGeral = new PedidosServices()
         const resposta = await listarProdutosGeral.listarProdutosGeral()

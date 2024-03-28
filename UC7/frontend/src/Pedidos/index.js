@@ -1,10 +1,14 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
+import { AuthContexts } from '../Contexts/AuthContext'
 import Modal from 'react-modal'
 import { toast } from 'react-toastify'
 import apiLocal from '../API/apiLocal/api'
-import './estilo.pedidos.css'
+import './estilo.pedidos.scss'
 
 export default function Pedidos() {
+
+    const {verificaToken, token} = useContext(AuthContexts)
+    verificaToken()
 
     const [clientes, setClientes] = useState([''])
     const [idCliente, setIdCliente] = useState('')
@@ -18,10 +22,7 @@ export default function Pedidos() {
     const [itensPedido, setItensPedido] = useState([''])
     const [valorTotal, setValorTotal] = useState('')
 
-    const [modalAberto, setModalAberto] = useState(false)
-
-    const iToken = localStorage.getItem('@tklogin2023')
-    const token = JSON.parse(iToken)
+    const [modalAberto, setModalAberto] = useState(false)    
 
     useEffect(() => {
         try {
@@ -235,7 +236,9 @@ export default function Pedidos() {
                                 </>
                             )
                         })}
-                        <h1>Valor Total: {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(`${valorTotal}`)} </h1>
+                        {valorTotal !== null && (
+                            <h1>Valor Total: {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(`${valorTotal}`)} </h1>
+                        )}
                     </>
                     <button onClick={fecharModal}>Finalizar Pedidos</button>
                 </Modal>
