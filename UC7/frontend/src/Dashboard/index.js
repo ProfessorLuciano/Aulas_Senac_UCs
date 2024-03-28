@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { AuthContexts } from '../Contexts/AuthContext'
 import { Link, useNavigate } from 'react-router-dom'
 import apiLocal from '../API/apiLocal/api'
+import { toast } from 'react-toastify'
 import './estilo.dashboard.scss'
 
 
@@ -12,6 +13,7 @@ export default function Dashboard() {
     verificaToken()
 
     const [pedidos, setPedidos] = useState([''])
+    const [dadosPedidos, setDadosPedidos] = useState(false)
 
     useEffect(() => {
         async function lerPedidos() {
@@ -21,9 +23,31 @@ export default function Dashboard() {
                 }
             })
             setPedidos(resposta.data)
+            setDadosPedidos(true)
         }
         lerPedidos()
-    }, [])
+    }, [pedidos])
+
+    async function handleAceitar(id) {
+        try {
+            const status = 'Confirmado'
+            const aceito = true
+            await apiLocal.put('/AceitarPedidos', {
+                id,
+                status,
+                aceito
+            }, {
+                headers: {
+                    Authorization: 'Bearer ' + `${token}`
+                }
+            })
+            toast.success('Pedido Aceito', {
+                toastId: 'toastId'
+            })
+        } catch (err) {
+
+        }
+    }
 
     function handleSair() {
         localStorage.removeItem('@tklogin24')
@@ -52,18 +76,27 @@ export default function Dashboard() {
                                 <th>Status Pedido</th>
                                 <th>Aceitar</th>
                             </tr>
-                            {pedidos.map((item) => {
-                                return(
-                                    <>
-                                    <tr key="">
-                                        <td>{item.n_pedido}</td>
-                                        <td>{item.clientes.nome}</td>
-                                        <td>{item.status}</td>
-                                    </tr>
-                                    
-                                    </>
-                                )
-                            })}                            
+                            {dadosPedidos === true && (
+                                <>
+                                    {pedidos.map((item) => {
+                                        return (
+                                            <>
+                                                <tr key="">
+                                                    {item.aceito === false && item.draft === false && item.entrega === false && (
+                                                        <>
+                                                            <td>{item.n_pedido}</td>
+                                                            <td>{item.clientes.nome}</td>
+                                                            <td>{item.status}</td>
+                                                            <td><Link onClick={() => handleAceitar(item.id)}>Clique Para Aceitar</Link></td>
+                                                        </>
+                                                    )}
+                                                </tr>
+                                            </>
+                                        )
+                                    })
+                                    }
+                                </>
+                            )}
                         </thead>
                     </table>
                 </div>
@@ -77,12 +110,27 @@ export default function Dashboard() {
                                 <th>Status Pedido</th>
                                 <th>Situação</th>
                             </tr>
-                            <tr key="">
-                                <td>Teste</td>
-                                <td>Teste</td>
-                                <td>Teste</td>
-                                <td>Aceito</td>
-                            </tr>
+                            {dadosPedidos === true && (
+                                <>
+                                    {pedidos.map((item) => {
+                                        return (
+                                            <>
+                                                <tr key="">
+                                                    {item.aceito === true && item.draft === false && item.entrega === false && (
+                                                        <>
+                                                        <td>{item.n_pedido}</td>
+                                                        <td>{item.clientes.nome}</td>
+                                                        <td>{item.status}</td>
+                                                        <td>Aceito</td>
+                                                        </>
+                                                    )}
+
+                                                </tr>
+                                            </>
+                                        )
+                                    })}
+                                </>
+                            )}
                         </thead>
                     </table>
                 </div>

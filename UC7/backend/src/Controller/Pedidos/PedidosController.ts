@@ -10,6 +10,17 @@ class PedidosController {
         return res.json(resposta)
     }
 
+    async aceitarPedidos(req: Request, res: Response){
+        const {id, status, aceito} = req.body
+        const aceitarPedidos = new PedidosServices()
+        const resposta = aceitarPedidos.aceitarPedidos({
+            id,
+            status,
+            aceito
+        })
+        return res.json(resposta)
+    }
+
     async listarProdutosGeral(req: Request, res: Response){
         const listarProdutosGeral = new PedidosServices()
         const resposta = await listarProdutosGeral.listarProdutosGeral()

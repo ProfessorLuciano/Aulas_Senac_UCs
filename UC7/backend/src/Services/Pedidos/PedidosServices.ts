@@ -6,16 +6,22 @@ interface IdCliente {
 interface ListarProdutos {
     id: string
 }
-interface CriarItensPedido{
+interface CriarItensPedido {
     id_pedido: string
     id_produto: string
     quantidade: number
     valor: number
 }
 
+interface AceitarPedidos {
+    id: string
+    status: string
+    aceito: boolean
+}
+
 class PedidosServices {
 
-    async listarPedidos(){
+    async listarPedidos() {
         const resposta = await prismaClient.pedido.findMany({
             include: {
                 clientes: true
@@ -24,7 +30,20 @@ class PedidosServices {
         return resposta
     }
 
-    async listarProdutosGeral(){
+    async aceitarPedidos({ id, status, aceito }: AceitarPedidos) {
+        const resposta = await prismaClient.pedido.update({
+            where: {
+                id: id
+            },
+            data: {
+                status: status,
+                aceito: aceito
+            }
+        })
+        return resposta
+    }
+
+    async listarProdutosGeral() {
         const resposta = await prismaClient.produto.findMany({
             include: {
                 categorias: true
@@ -55,7 +74,7 @@ class PedidosServices {
         return resposta
     }
 
-    async criarItensPedido({id_pedido, id_produto, quantidade, valor}: CriarItensPedido){
+    async criarItensPedido({ id_pedido, id_produto, quantidade, valor }: CriarItensPedido) {
         const itemExite = await prismaClient.itemPedido.findFirst({
             where: {
                 AND: [
@@ -69,46 +88,46 @@ class PedidosServices {
             }
         })
 
-        if(itemExite){
-            throw new Error ('Item Já Adicionado')
+        if (itemExite) {
+            throw new Error('Item Já Adicionado')
         }
 
         const resposta = await prismaClient.itemPedido.create({
-            data:{
+            data: {
                 id_pedido: id_pedido,
                 id_produto: id_produto,
                 quantidade: quantidade,
                 valor: valor
             },
-            include:{
+            include: {
                 produtos: true
             }
         })
         return resposta
     }
 
-    async apagarItemPedido({id}: ListarProdutos){
+    async apagarItemPedido({ id }: ListarProdutos) {
         await prismaClient.itemPedido.delete({
             where: {
                 id: id
             }
         })
-        return {dados: 'Item Deletado'}
+        return { dados: 'Item Deletado' }
     }
 
-    async somarItensPedidos({id}: ListarProdutos){
-       const resposta = await prismaClient.itemPedido.aggregate({
-           _sum: {
-               valor: true
+    async somarItensPedidos({ id }: ListarProdutos) {
+        const resposta = await prismaClient.itemPedido.aggregate({
+            _sum: {
+                valor: true
             },
             where: {
                 id_pedido: id
             }
         })
-       return resposta._sum.valor
+        return resposta._sum.valor
     }
 
-    
+
 }
 
 export { PedidosServices }
